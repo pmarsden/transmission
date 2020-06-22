@@ -290,7 +290,7 @@ function Inspector(controller) {
             }
             if (!str.length) {
                 if (baseline < 0) {
-                    str = unknown;
+                    str = none;
                 } else {
                     str = fmt.timeInterval(baseline);
                 }
