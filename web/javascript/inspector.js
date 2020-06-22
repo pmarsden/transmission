@@ -314,17 +314,16 @@ function Inspector(controller) {
                         latest = d;
                     };
                 };
-                d = now / 1000 - latest; // seconds since last activity
+                d = now / 1000 - latest; // Seconds since last activity
                 if (d < 0) {
                     str = none;
                 } else if (d < 5) {
                     str = active;
-				} else if (latest < 1) {
-					str = never;
+                } else if (latest < 1) {
+                    str = never;
                 } else {
                     str = fmt.timeInterval(d) + ' ago';
                 };
-
             };
             setTextContent(e.last_activity_lb, str);
 
