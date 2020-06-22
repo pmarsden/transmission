@@ -92,8 +92,10 @@ function Inspector(controller) {
                 e = data.elements,
                 fmt = Transmission.fmt,
                 none = 'None',
-                mixed = 'Mixed',
-                unknown = 'Unknown',
+				mixed = 'Mixed',
+				unknown = 'Unknown',
+                never = 'Never',
+                active = 'Active Now',
                 isMixed, allPaused, allFinished,
                 str,
                 baseline, it, s, i, t,
@@ -316,10 +318,13 @@ function Inspector(controller) {
                 if (d < 0) {
                     str = none;
                 } else if (d < 5) {
-                    str = 'Active now';
+                    str = active;
+				} else if (latest < 1) {
+					str = never;
                 } else {
                     str = fmt.timeInterval(d) + ' ago';
                 };
+
             };
             setTextContent(e.last_activity_lb, str);
 
