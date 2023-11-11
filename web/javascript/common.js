@@ -114,7 +114,8 @@ Prefs._FilterActive = 'active';
 Prefs._FilterSeeding = 'seeding';
 Prefs._FilterDownloading = 'downloading';
 Prefs._FilterPaused = 'paused';
-Prefs._FilterFinished = 'finished';
+Prefs._FilterFailed = 'failed';
+Prefs._FilterVerifying = 'verifying';
 
 Prefs._SortDirection = 'sort_direction';
 Prefs._SortAscending = 'ascending';
@@ -129,6 +130,7 @@ Prefs._SortBySize = 'size';
 Prefs._SortByProgress = 'percent_completed';
 Prefs._SortByRatio = 'ratio';
 Prefs._SortByState = 'state';
+Prefs._SortByUpload = 'upload_speed';
 
 Prefs._CompactDisplayState = 'compact_display_state';
 
@@ -136,9 +138,9 @@ Prefs._Defaults = {
     'filter': 'all',
     'refresh_rate': 5,
     'sort_direction': 'ascending',
-    'sort_method': 'name',
+    'sort_method': 'age',
     'turtle-state': false,
-    'compact_display_state': false
+    'compact_display_state': true
 };
 
 /*
