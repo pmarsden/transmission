@@ -54,18 +54,19 @@
 
 		<div id="statusbar">
 			<div id='filter'>
-				Show
+				Show : 
 				<select id="filter-mode">
 					<option value="all">All</option>
 					<option value="active">Active</option>
 					<option value="downloading">Downloading</option>
 					<option value="seeding">Seeding</option>
 					<option value="paused">Paused</option>
-					<option value="finished">Finished</option>
+					<option value="failed">Failed</option>
+					<option value="verifying">Verifying</option>
 				</select>
 				<select id="filter-tracker"></select>
+				&nbsp;&nbsp;<b><span id="filter-count"></span></b>&nbsp;&nbsp;
 				<input type="search" id="torrent_search" placeholder="Filter" />
-				<span id="filter-count">&nbsp;</span>
 			</div>
 
 			<div id='speed-info'>
@@ -197,6 +198,7 @@
 
 			<div id="inspector_header">
 				<div id="torrent_inspector_name"></div>
+				<span id="torrent_inspector_size"></span>
 			</div>
 
 			<div class="inspector-page" id="inspector-page-info">
@@ -207,7 +209,7 @@
 					<div class="row"><div class="key">Uploaded:</div><div class="value" id="inspector-info-uploaded">&nbsp;</div></div>
 					<div class="row"><div class="key">Downloaded:</div><div class="value" id="inspector-info-downloaded">&nbsp;</div></div>
 					<div class="row"><div class="key">State:</div><div class="value" id="inspector-info-state">&nbsp;</div></div>
-					<div class="row"><div class="key">Torrent Age:</div><div class="value" id="inspector-info-age">&nbsp;</div></div>
+					<div class="row"><div class="key">Age:</div><div class="value" id="inspector-info-age">&nbsp;</div></div>
 					<div class="row"><div class="key">Running Time:</div><div class="value" id="inspector-info-running-time">&nbsp;</div></div>
 					<div class="row"><div class="key">Remaining Time:</div><div class="value" id="inspector-info-remaining-time">&nbsp;</div></div>
 					<div class="row"><div class="key">Last Activity:</div><div class="value" id="inspector-info-last-activity">&nbsp;</div></div>
@@ -221,6 +223,7 @@
 					<div class="row"><div class="key">Privacy:</div><div class="value" id="inspector-info-privacy">&nbsp;</div></div>
 					<div class="row"><div class="key">Origin:</div><div class="value" id="inspector-info-origin">&nbsp;</div></div>
 					<div class="row"><div class="key">Comment:</div><div class="value" id="inspector-info-comment">&nbsp;</div></div>
+					<div class="row"><div class="key">Date Added:</div><div class="value" id="inspector-info-added">&nbsp;</div></div>
 				</div>
 			</div><!-- id="inspector_tab_info_container" -->
 
@@ -481,14 +484,15 @@
 				<li>---</li>
 				<li>Sort Transfers By
 					<ul id="footer_sort_menu">
-						<li radio-group="sort-mode" id="sort_by_queue_order">Queue Order</li>
-						<li radio-group="sort-mode" id="sort_by_activity">Activity</li>
 						<li radio-group="sort-mode" id="sort_by_age">Age</li>
 						<li radio-group="sort-mode" id="sort_by_name">Name</li>
 						<li radio-group="sort-mode" id="sort_by_percent_completed">Progress</li>
 						<li radio-group="sort-mode" id="sort_by_ratio">Ratio</li>
 						<li radio-group="sort-mode" id="sort_by_size">Size</li>
 						<li radio-group="sort-mode" id="sort_by_state">State</li>
+						<li radio-group="sort-mode" id="sort_by_queue_order">Queue Order</li>
+						<li radio-group="sort-mode" id="sort_by_activity">Last Active</li>
+						<li radio-group="sort-mode" id="sort_by_upload_speed">Upload Speed</li>
 						<li>---</li>
 						<li id="reverse_sort_order">Reverse Sort Order</li>
 					</ul>
