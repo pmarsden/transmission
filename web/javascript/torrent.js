@@ -48,12 +48,16 @@ Torrent.Fields = {};
 // finishes downloading its metadata
 Torrent.Fields.Metadata = [
     'addedDate',
-    'name',
     'totalSize'
 ];
 
 // commonly used fields which need to be periodically refreshed
 Torrent.Fields.Stats = [
+    'name',
+    'haveValid',
+    'haveUnchecked',
+    'activityDate',
+    'desiredAvailable',
     'error',
     'errorString',
     'eta',
@@ -351,6 +355,9 @@ Torrent.prototype = {
     isChecking: function () {
         return this.getStatus() === Torrent._StatusCheck;
     },
+    isWaitingForCheck: function () {
+        return this.getStatus() === Torrent._StatusCheckWait;
+    },
     isDownloading: function () {
         return this.getStatus() === Torrent._StatusDownload;
     },
@@ -375,17 +382,17 @@ Torrent.prototype = {
     getStateString: function () {
         switch (this.getStatus()) {
         case Torrent._StatusStopped:
-            return this.isFinished() ? 'Seeding complete' : 'Paused';
+            return this.isFinished() ? 'Completed' : 'Paused';
         case Torrent._StatusCheckWait:
-            return 'Queued for verification';
+            return 'Queued [Verify]';
         case Torrent._StatusCheck:
             return 'Verifying local data';
         case Torrent._StatusDownloadWait:
-            return 'Queued for download';
+            return 'Queued [Download]';
         case Torrent._StatusDownload:
             return 'Downloading';
         case Torrent._StatusSeedWait:
-            return 'Queued for seeding';
+            return 'Queued [Seeding]';
         case Torrent._StatusSeed:
             return 'Seeding';
         case null:
@@ -449,8 +456,10 @@ Torrent.prototype = {
             return (s === Torrent._StatusDownload) || (s === Torrent._StatusDownloadWait);
         case Prefs._FilterPaused:
             return this.isStopped();
-        case Prefs._FilterFinished:
-            return this.isFinished();
+        case Prefs._FilterFailed:
+            return (this.getError() !== Torrent._ErrNone);
+        case Prefs._FilterVerifying:
+            return (s === Torrent._StatusCheck) || (s === Torrent._StatusCheckWait);
         default:
             return true;
         }
@@ -507,14 +516,32 @@ Torrent.compareByState = function (ta, tb) {
     return (b - a) || Torrent.compareByQueue(ta, tb);
 };
 Torrent.compareByActivity = function (ta, tb) {
-    var a = ta.getActivity();
-    var b = tb.getActivity();
+    var a = ta.getLastActivity();
+    var b = tb.getLastActivity();
 
-    return (b - a) || Torrent.compareByState(ta, tb);
+    if (a < b) {
+        return 1;
+    };
+    if (a > b) {
+        return -1;
+    };
+    return Torrent.compareByState(ta, tb);
 };
 Torrent.compareByRatio = function (ta, tb) {
     var a = ta.getUploadRatio();
     var b = tb.getUploadRatio();
+
+    if (a < b) {
+        return 1;
+    };
+    if (a > b) {
+        return -1;
+    };
+    return Torrent.compareByState(ta, tb);
+};
+Torrent.compareByUpload = function (ta, tb) {
+    var a = ta.getUploadSpeed();
+    var b = tb.getUploadSpeed();
 
     if (a < b) {
         return 1;
@@ -562,6 +589,9 @@ Torrent.compareTorrents = function (a, b, sortMethod, sortDirection) {
     case Prefs._SortByRatio:
         i = Torrent.compareByRatio(a, b);
         break;
+    case Prefs._SortByUpload:
+        i = Torrent.compareByUpload(a, b);
+        break;
     default:
         i = Torrent.compareByName(a, b);
         break;
@@ -601,6 +631,9 @@ Torrent.sortTorrents = function (torrents, sortMethod, sortDirection) {
         break;
     case Prefs._SortByRatio:
         torrents.sort(this.compareByRatio);
+        break;
+    case Prefs._SortByUpload:
+        torrents.sort(this.compareByUpload);
         break;
     default:
         torrents.sort(this.compareByName);
